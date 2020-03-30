@@ -9,4 +9,9 @@ public class TheFinalGrade extends Game {
 	public void create() {
 		setScreen(new StartMenu(this,"Sprites/Fondo.png"));
 	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+	}
 }

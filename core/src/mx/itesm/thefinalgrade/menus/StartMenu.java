@@ -1,6 +1,7 @@
 package mx.itesm.thefinalgrade.menus;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import mx.itesm.thefinalgrade.TheFinalGrade;
+import mx.itesm.thefinalgrade.util.variables.UserPreferences;
 
 public class StartMenu extends Menu {
 
@@ -18,6 +20,8 @@ public class StartMenu extends Menu {
 
     // Declare textures
     private Texture playTexture, playTextureP, textureNiño, textureCalendario;
+
+    private Music music;
 
     public StartMenu(TheFinalGrade game, String backgroundPath) {
         super(game, backgroundPath);
@@ -56,6 +60,12 @@ public class StartMenu extends Menu {
 
         // Add input processor
         Gdx.input.setInputProcessor(menuStage);
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/Mushroom Theme.mp3"));
+        music.setVolume(UserPreferences.getInstance().getVolume());
+        music.setLooping(true);
+        music.setPosition(UserPreferences.getInstance().getPosition());
+        music.play();
     }
     @Override
     public void render(float delta) {
@@ -74,6 +84,8 @@ public class StartMenu extends Menu {
     @Override
     public void dispose() {
         // Dispose resources to clean memory
+        UserPreferences.getInstance().setPosition(music.getPosition());
+        music.dispose();
         background.dispose();
         playTexture.dispose();
         playTextureP.dispose();
