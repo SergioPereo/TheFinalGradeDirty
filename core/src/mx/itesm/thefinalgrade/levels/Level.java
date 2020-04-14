@@ -53,5 +53,6 @@ public abstract class Level extends Pantalla {
     @Override
     public void dispose() {
         background.dispose();
+        levelStage.dispose();
     }
 }

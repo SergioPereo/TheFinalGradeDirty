@@ -17,4 +17,20 @@ public class Element {
         sprite.draw(batch);
     }
 
+    public float getTextureX(){
+        return sprite.getX();
+    }
+
+    public float getTextureY(){
+        return sprite.getY();
+    }
+
+    public float getTextureWidth(){
+        return sprite.getWidth();
+    }
+
+    public float getTextureHeight(){
+        return sprite.getHeight();
+    }
+
 }

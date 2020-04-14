@@ -36,7 +36,6 @@ public class MainMenu extends Menu {
     protected void createMenu() {
         //la escena se conecta con la vista
         menuStage = new Stage(vista);
-        levelStage = new Stage(vista);
 
 
         //boton continuar
@@ -132,15 +131,15 @@ public class MainMenu extends Menu {
 
 
         // Add actors
-        levelStage.addActor(newGameBtn);
-        levelStage.addActor(optionBtn);
-        levelStage.addActor(continuebtn);
-        levelStage.addActor(creditsBtn);
-        levelStage.addActor(exitBtn);
+        menuStage.addActor(newGameBtn);
+        menuStage.addActor(optionBtn);
+        menuStage.addActor(continuebtn);
+        menuStage.addActor(creditsBtn);
+        menuStage.addActor(exitBtn);
 
 
         // Add input processor
-        Gdx.input.setInputProcessor(levelStage);
+        Gdx.input.setInputProcessor(menuStage);
 
         music = Gdx.audio.newMusic(Gdx.files.internal("music/Mushroom Theme.mp3"));
         System.out.println("Current Position: " + UserPreferences.getInstance().getPosition());
@@ -158,7 +157,7 @@ public class MainMenu extends Menu {
         batch.draw(background,0,0);
         batch.draw(textniño,550,0);
         batch.end();
-        levelStage.draw();
+        menuStage.draw();
 
     }
     @Override
@@ -178,5 +177,6 @@ public class MainMenu extends Menu {
         textExit2.dispose();
         textcalendar.dispose();
         textniño.dispose();
+        menuStage.dispose();
     }
 }

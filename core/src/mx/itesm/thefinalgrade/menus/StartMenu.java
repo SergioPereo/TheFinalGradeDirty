@@ -89,5 +89,6 @@ public class StartMenu extends Menu {
         background.dispose();
         playTexture.dispose();
         playTextureP.dispose();
+        menuStage.dispose();
     }
 }

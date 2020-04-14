@@ -12,7 +12,6 @@ public abstract class Menu extends Pantalla {
     protected String backgroundPath;
     protected Texture background;
     protected Stage menuStage;
-    protected Stage levelStage;
 
     public Menu(TheFinalGrade game, String backgroundPath){
         this.game = game;
@@ -50,5 +49,6 @@ public abstract class Menu extends Pantalla {
     @Override
     public void dispose() {
         background.dispose();
+        menuStage.dispose();
     }
 }

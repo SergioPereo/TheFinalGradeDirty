@@ -10,4 +10,5 @@ public class Platform extends Element {
     public void move(float dx, float dy){
         sprite.setPosition(sprite.getX()+dx, sprite.getY()+dy);
     }
+
 }
