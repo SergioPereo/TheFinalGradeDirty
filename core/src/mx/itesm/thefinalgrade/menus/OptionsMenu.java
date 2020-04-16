@@ -34,17 +34,21 @@ public class OptionsMenu extends Menu{
 
         menuStage = new Stage(vista);
 
-        instructionsTexture = new Texture("Sprites/button_creditos.png");
+
+        instructionsTexture = new Texture("Credits.png");
         TextureRegionDrawable textureRegionInstructionsButton = new TextureRegionDrawable(new TextureRegion(instructionsTexture));
-        instructionsTexturePress = new Texture("Sprites/button_creditos2.png");
+        instructionsTexturePress = new Texture("Credits.png");
+
         TextureRegionDrawable textureRegionInstructionsButtonPress = new TextureRegionDrawable(new TextureRegion(instructionsTexturePress));
 
         ImageButton instructionsButton = new ImageButton(textureRegionInstructionsButton, textureRegionInstructionsButtonPress);
         instructionsButton.setPosition(ANCHO/3, 6*ALTO/7);
 
-        backButtonTexture = new Texture("Sprites/button_creditos.png");
+
+        backButtonTexture = new Texture("Credits.png");
         TextureRegionDrawable textureRegionBackButton = new TextureRegionDrawable(new TextureRegion(backButtonTexture));
-        backButtonTexturePressed = new Texture("Sprites/button_creditos2.png");
+        backButtonTexturePressed = new Texture("Credits.png");
+
         TextureRegionDrawable textureRegionBackButtonPressed = new TextureRegionDrawable(new TextureRegion(backButtonTexturePressed));
 
         ImageButton backButton = new ImageButton(textureRegionBackButton, textureRegionBackButtonPressed);
@@ -54,13 +58,14 @@ public class OptionsMenu extends Menu{
             @Override
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
-                game.setScreen(new MainMenu(game, "Sprites/Fondo.png"));
+
+                game.setScreen(new MainMenu(game, "Fondo_StartMenu.png"));
             }
         });
 
-        soundsSettingsTexture = new Texture("Sprites/button_creditos.png");
+        soundsSettingsTexture = new Texture("Credits.png");
         TextureRegionDrawable textureRegionSoundSettings = new TextureRegionDrawable(new TextureRegion(soundsSettingsTexture));
-        soundsSettingsTexturePress = new Texture("Sprites/button_creditos2.png");
+        soundsSettingsTexturePress = new Texture("Credits.png");
         TextureRegionDrawable textureRegionSoundSettingsPress = new TextureRegionDrawable(new TextureRegion(soundsSettingsTexturePress));
 
         ImageButton soundSettingsButton = new ImageButton(textureRegionSoundSettings, textureRegionSoundSettingsPress);
@@ -70,7 +75,7 @@ public class OptionsMenu extends Menu{
             @Override
             public void clicked(InputEvent event, float x, float y){
                 super.clicked(event, x, y);
-                game.setScreen(new SoundSettingsMenu(game, "Sprites/Fondo.png"));
+                game.setScreen(new SoundSettingsMenu(game, "Fondo_StartMenu.png"));
             }
         });
 
@@ -79,9 +84,10 @@ public class OptionsMenu extends Menu{
         menuStage.addActor(backButton);
 
         //imagen Niño
-        textniño = new Texture("Sprites/niño.png");
+
+        textniño = new Texture("Niño/Niño.png");
         //imagen calendario
-        textcalendar = new Texture("Sprites/Calendario.png");
+        textcalendar = new Texture("Calendario.png");
 
         // Add input processor
         Gdx.input.setInputProcessor(menuStage);

@@ -32,6 +32,10 @@ public class SoundSettingsMenu extends Menu{
         super(game, backgroundPath);
     }
 
+    public void show() {
+        super.show();
+    }
+
     @Override
     protected void createMenu() {
         menuStage = new Stage(vista);
@@ -39,19 +43,18 @@ public class SoundSettingsMenu extends Menu{
         textureNiño = new Texture("Sprites/niño.png");
         textureCalendario = new Texture("Sprites/Calendario.png");
 
-        backButtonTexture = new Texture("Sprites/button_creditos.png");
+        backButtonTexture = new Texture("BotonRegresar.png");
         TextureRegionDrawable textureRegionBackButton = new TextureRegionDrawable(new TextureRegion(backButtonTexture));
-        backButtonTexturePressed = new Texture("Sprites/button_creditos2.png");
+        backButtonTexturePressed = new Texture("BotonRegresar_Click.png");
         TextureRegionDrawable textureRegionBackButtonPressed = new TextureRegionDrawable(new TextureRegion(backButtonTexturePressed));
 
         ImageButton backButton = new ImageButton(textureRegionBackButton, textureRegionBackButtonPressed);
-        backButton.setPosition(ANCHO/12, 8*ALTO/9);
+        backButton.setPosition(ANCHO/100, 6*ALTO/9);
 
         backButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y){
-                super.clicked(event, x, y);
-                game.setScreen(new OptionsMenu(game, "Sprites/Fondo.png"));
+                game.setScreen(new MainMenu(game, "Fondo_StartMenu.png"));
             }
         });
 

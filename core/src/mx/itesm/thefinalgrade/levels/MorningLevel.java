@@ -5,84 +5,94 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import mx.itesm.thefinalgrade.TheFinalGrade;
+import mx.itesm.thefinalgrade.menus.MainMenu;
+import mx.itesm.thefinalgrade.util.Text;
+import mx.itesm.thefinalgrade.util.objects.Bonus;
 import mx.itesm.thefinalgrade.util.objects.Obstacle;
 import mx.itesm.thefinalgrade.util.objects.Platform;
 import mx.itesm.thefinalgrade.util.objects.Player;
+import mx.itesm.thefinalgrade.util.variables.UserPreferences;
 
 public class MorningLevel extends Level {
-
     // Player padding
     private float playerPaddingLeft = 20, playerPaddingBottom = 20;
 
-    Texture playerTexture;
     Texture platformTexture;
     Texture obstacleTexture;
 
     private float movementMultiplicator = 60f;
 
-    private Movement playerMovement = Movement.IDLE;
     private boolean isGrounded = true;
 
-    public enum Movement{
-        RIGHT, LEFT, JUMP, IDLE
-    }
+    private Text score = new Text(4);
 
     public MorningLevel(TheFinalGrade game, String backgroundPath) {
         super(game, backgroundPath);
         this.backgroundPath = backgroundPath;
     }
+    protected void loadTextures(){
 
-    private void loadTextures(){
-
-        playerTexture = new Texture("Sprites/niñoJuego.png");
-        platformTexture = new Texture("Sprites/platform.png");
-        obstacleTexture = new Texture("Sprites/Hoja.png");
+        platformTexture = new Texture("Plataforma 1.png");
+        obstacleTexture = new Texture("HojaRota.png");
+        playerTexture = new Texture("Niño/Niño.png");
+        hojaBuenaTexture = new Texture("Hoja.png");
+        botonBrincar = new Texture("Brincar.png");
+        brincarClicked = new Texture("BrincarClicked.png");
 
     }
 
-    private void createPlayer(){
-        player = new Player(playerTexture, playerTexture.getWidth() +
-                playerPaddingLeft, playerTexture.getHeight() + playerPaddingBottom);
-    }
 
-    private void createPlatforms(){
+
+    protected void createPlatforms() {
         // Must be the same lengths unless you want the game to crash or do strange platforms
-        float[] platformsXCoordinates = {0, ANCHO/3-100, ANCHO/2, ANCHO/2+300, ANCHO-platformTexture.getWidth()};
-        float[] platformsYCoordinates = {0, ALTO/3-100, ALTO/2, ALTO-400, ALTO-platformTexture.getHeight()*2};
+        float[] platformsXCoordinates = {0, ANCHO / 3 - 100, ANCHO / 2, ANCHO / 2 + 300, ANCHO - platformTexture.getWidth()};
+        float[] platformsYCoordinates = {0, ALTO / 3 - 100, ALTO / 2, ALTO - 400, ALTO - platformTexture.getHeight() * 2};
         platforms = new Array<>(5);
 
-        for (int i = 0; i < platformsXCoordinates.length ; i++){
+        for (int i = 0; i < platformsXCoordinates.length; i++) {
             platforms.add(new Platform(platformTexture, platformsXCoordinates[i], platformsYCoordinates[i]));
         }
     }
 
     private void createObstacles(){
-        obstacles = new Array<>(1);
+        obstacles = new Array<>();
         obstacles.add(new Obstacle(obstacleTexture, ANCHO/3, ALTO/3));
+
+    }
+
+    private void createBonus(){
+        bonus = new Array<Bonus>();
+        bonus.add(new Bonus(hojaBuenaTexture, ANCHO/2+300, ALTO-500));
+        bonus.add(new Bonus(hojaBuenaTexture,200, 80));
     }
 
     @Override
     public void show() {
-        if(backgroundPath.length() > 0 && backgroundPath != null){
+        if (backgroundPath.length() > 0 && backgroundPath != null) {
             background = new Texture(this.backgroundPath);
-            loadTextures();
-            createPlayer();
             createLevel();
-            Gdx.input.setInputProcessor(new CustomInputProcessor());
         }
-    }
+        //Gdx.input.setInputProcessor(new CustomInputProcessor());//Para el Touchdown
+        Gdx.input.setInputProcessor(levelStage);
 
+    }
     @Override
     protected void createLevel() {
-
         levelStage = new Stage(vista);
-        createPlayer();
+        loadTextures();
+        super.createPlayer();
         createObstacles();
         createPlatforms();
-
+        createBonus();
+        createHUD();
+        createButton();
     }
 
     @Override
@@ -92,130 +102,25 @@ public class MorningLevel extends Level {
         batch.setProjectionMatrix(camara.combined);
         batch.begin();
         batch.draw(background,0,0);
+        score.draw(batch, "" + UserPreferences.getInstance().getScore(), 8*ANCHO/9, 20*ALTO/21);
         player.render(batch);
 
         for(Platform platform: platforms){
             platform.render(batch);
         }
-
-
+        for (Bonus bonus : bonus){
+            bonus.render(batch);
+        }
         for(Obstacle obstacle: obstacles){
             obstacle.render(batch);
         }
         batch.end();
-    }
-
-    public void updates(float delta){
-        movePlayer(delta);
-        if(!collisions()){
-            player.gravity(-movementMultiplicator*delta);
-            isGrounded = false;
-        } else {
-            player.gravity(-player.getyAcceleration());
-            isGrounded = true;
-        }
-
-    }
-
-    private boolean collisions() {
-        Rectangle playerRect = new Rectangle(player.getTextureX(), player.getTextureY(),
-                player.getTextureWidth(), player.getTextureHeight());
-        boolean colliding = false;
-        for(Platform platform : platforms) {
-            Rectangle platformRect = new Rectangle(platform.getTextureX(), platform.getTextureY(),
-                    platform.getTextureWidth(), platform.getTextureHeight());
-            if (playerRect.overlaps(platformRect)) {
-                System.out.println("Colliiiiiiiiiiiiidiiiiiiiiiiiiing");
-                colliding = true;
-                break;
-            }
-        }
-        return colliding;
-    }
-
-    private void movePlayer(float delta) {
-        switch (playerMovement){
-            case IDLE:
-
-                break;
-            case RIGHT:
-                player.move(movementMultiplicator*delta, 0);
-                System.out.println("MOVING RIGHT: " + movementMultiplicator*delta);
-                break;
-            case LEFT:
-                player.move(-movementMultiplicator*delta, 0);
-                System.out.println("MOVING LEFT: " + -movementMultiplicator*delta);
-                break;
-            case JUMP:
-                break;
-            default:
-                break;
-        }
+        levelStage.draw();
+        levelStage.act();
     }
 
     @Override
     public void dispose() {
         background.dispose();
     }
-
-    private class CustomInputProcessor implements InputProcessor {
-        @Override
-        public boolean keyDown(int keycode) {
-            return false;
-        }
-
-        @Override
-        public boolean keyUp(int keycode) {
-            return false;
-        }
-
-        @Override
-        public boolean keyTyped(char character) {
-            return false;
-        }
-
-        @Override
-        public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-            Vector3 v = new Vector3(screenX, screenY, 0);
-            camara.unproject(v);
-            if(v.y >= ALTO/2){
-                playerMovement = Movement.JUMP;
-
-                player.setYAcceleration(10f);
-                System.out.println("JUMP");
-            } else {
-                if(v.x>=ANCHO/2){
-                    playerMovement = Movement.RIGHT;
-                    System.out.println("RIGHT");
-                } else {
-                    playerMovement = Movement.LEFT;
-                    System.out.println("LEFT");
-                }
-            }
-
-            return true;
-        }
-
-        @Override
-        public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-            playerMovement = Movement.IDLE;
-            return true;
-        }
-
-        @Override
-        public boolean touchDragged(int screenX, int screenY, int pointer) {
-            return false;
-        }
-
-        @Override
-        public boolean mouseMoved(int screenX, int screenY) {
-            return false;
-        }
-
-        @Override
-        public boolean scrolled(int amount) {
-            return false;
-        }
-    }
 }
-

@@ -8,6 +8,7 @@ public class UserPreferences {
     private Preferences preferences;
     private float volume = 0.3f;
     private float position = 0f;
+    private int score = 0;
 
     private UserPreferences(){
         preferences = Gdx.app.getPreferences("Game Preferences");
@@ -41,6 +42,10 @@ public class UserPreferences {
         getPreferences().flush();
     }
 
+    public void setScore(int score){
+        this.score = score;
+    }
+
     public float getPosition(){
         return position;
     }
@@ -48,4 +53,6 @@ public class UserPreferences {
     public float getVolume(){
         return volume;
     }
+
+    public int getScore(){ return score; }
 }

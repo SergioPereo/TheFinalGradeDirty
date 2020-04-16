@@ -20,6 +20,7 @@ public abstract class Menu extends Pantalla {
 
     @Override
     public void show() {
+        menuStage = new Stage();
         if(backgroundPath.length() > 0 && backgroundPath != null){
             background = new Texture(this.backgroundPath);
             createMenu();
